@@ -1,0 +1,35 @@
+# ----- 系统 & IDE 无关文件 -----
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# JetBrains IDE (IntelliJ / WebStorm)
+.idea/
+*.iml
+/shelf/
+/.idea/workspace.xml
+/httpRequests/
+
+# VS Code
+.vscode/
+
+# ----- 依赖与构建 -----
+node_modules/
+dist/
+build/
+
+# ----- 环境变量 & 隐私信息 -----
+.env
+.env.*
+*.local
+
+# ----- 日志 & 临时文件 -----
+*.log
+tmp/
+temp/
+
+# ----- 数据存储 (避免上传本地测试数据) -----
+/dataSources/
+/dataSources.local.xml

@@ -1,0 +1,638 @@
+:root {
+    --ubuntu-bg: #2c001e;
+    --ubuntu-terminal-bg: rgba(44, 0, 30, 0.85);
+    --ubuntu-panel-bg: rgba(60, 10, 40, 0.8);
+    --ubuntu-text: #eeeeec;
+    --ubuntu-prompt: #4e9a06;
+    --ubuntu-highlight: #77216f;
+    --ubuntu-border: #5e2750;
+    --font-mono: 'Ubuntu Mono', 'Courier New', monospace;
+    --base-font-size: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--ubuntu-bg) center/cover no-repeat fixed;
+    font-family: var(--font-mono);
+    font-size: var(--base-font-size);
+    color: var(--ubuntu-text);
+    backdrop-filter: blur(2px);
+    transition: background-image 0.2s ease;
+}
+
+/* 默认背景 (渐变紫) */
+body {
+    background-image: radial-gradient(circle at 20% 30%, #3b1e3a, #1e0f1a);
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    padding: 20px;
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* ----- 终端主面板 ----- */
+.terminal-panel {
+    flex: 3;
+    background: var(--ubuntu-terminal-bg);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid var(--ubuntu-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: rgba(30, 10, 25, 0.5);
+    border-bottom: 1px solid #5e2750;
+}
+
+.window-title {
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+}
+.control {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #5e5e5e;
+}
+.control:nth-child(1) { background: #e45e5e; }
+.control:nth-child(2) { background: #e6b85e; }
+.control:nth-child(3) { background: #5e9e5e; }
+
+.terminal-output {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    font-size: 1rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: transparent;
+    scroll-behavior: smooth;
+}
+
+.terminal-output .command-line {
+    color: #b0e0b0;
+    margin-bottom: 4px;
+}
+.terminal-output .output-line {
+    color: #ddd;
+    margin-bottom: 8px;
+    padding-left: 8px;
+}
+.terminal-output .error-line {
+    color: #f48771;
+}
+
+.input-line {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    background: rgba(0,0,0,0.25);
+    border-top: 1px solid var(--ubuntu-border);
+}
+.prompt {
+    color: var(--ubuntu-prompt);
+    font-weight: bold;
+    margin-right: 10px;
+    user-select: none;
+}
+.cmd-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--ubuntu-text);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    caret-color: #4e9a06;
+}
+.cmd-input::placeholder {
+    color: #7a6a7a;
+    opacity: 0.6;
+}
+
+/* ----- 备忘录面板 ----- */
+.memo-panel {
+    flex: 1.2;
+    background: var(--ubuntu-panel-bg);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid var(--ubuntu-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(50, 15, 40, 0.6);
+    border-bottom: 1px solid #5e2750;
+    font-weight: bold;
+}
+.panel-header i {
+    color: #e6b85e;
+}
+.icon-btn {
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid #8a6a8a;
+    color: #eee;
+    width: 32px;
+    height: 32px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.icon-btn:hover {
+    background: #5e2750;
+    border-color: #b08ab0;
+}
+
+.memo-content {
+    padding: 16px;
+    overflow-y: auto;
+    flex: 1;
+    color: #f0e6f0;
+}
+/* Markdown 样式微调 */
+.markdown-body {
+    font-family: var(--font-mono);
+}
+.markdown-body h1, .markdown-body h2 { color: #e6b85e; }
+.markdown-body ul { padding-left: 20px; }
+.markdown-body li.task-list-item { list-style: none; }
+.markdown-body input[type="checkbox"] { margin-right: 8px; }
+
+.memo-editor {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+}
+.memo-editor textarea {
+    flex: 1;
+    background: #1e0f1a;
+    border: 1px solid #7e4e7e;
+    color: #eee;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    padding: 12px;
+    border-radius: 8px;
+    resize: none;
+    outline: none;
+}
+.editor-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+.ubuntu-btn {
+    background: #5e2750;
+    border: 1px solid #a05a90;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-family: var(--font-mono);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.ubuntu-btn.secondary {
+    background: transparent;
+    border-color: #8a6a8a;
+}
+.ubuntu-btn:hover {
+    background: #7e3e70;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #2a1122; }
+::-webkit-scrollbar-thumb { background: #6a3e5a; border-radius: 4px; }
+
+/* ============================================ */
+/* 各发行版主题（深度定制）                    */
+/* ============================================ */
+
+/* ----- Kali Linux (黑客风深色 · 增强版) ----- */
+body.theme-kali {
+    --ubuntu-bg: #0b1016;                      /* 更深邃的背景 */
+    --ubuntu-terminal-bg: rgba(11, 16, 22, 0.95);
+    --ubuntu-panel-bg: rgba(20, 30, 40, 0.92);
+    --ubuntu-text: #d0dae5;                    /* 稍亮文字，提升对比 */
+    --ubuntu-prompt: #43b581;                  /* Kali 标志性的亮绿 */
+    --ubuntu-highlight: #1e90ff;               /* 更纯正的蓝 */
+    --ubuntu-border: #1e3a5f;                  /* 边框带蓝调 */
+    background-image: radial-gradient(circle at 30% 40%, #1a2f4a, #0b1016);
+}
+
+body.theme-kali .terminal-header {
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid #1e90ff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.theme-kali .terminal-header .window-title {
+    color: #7eb6ff;
+    text-shadow: 0 0 6px rgba(30, 144, 255, 0.5);
+    font-weight: 600;
+}
+
+body.theme-kali .control:nth-child(1) { background: #ff5f56; box-shadow: 0 0 6px #ff5f5680; }
+body.theme-kali .control:nth-child(2) { background: #ffbd2e; box-shadow: 0 0 6px #ffbd2e80; }
+body.theme-kali .control:nth-child(3) { background: #27c93f; box-shadow: 0 0 6px #27c93f80; }
+
+body.theme-kali .panel-header {
+    background: rgba(15, 25, 40, 0.9);
+    border-bottom: 1px solid #1e90ff;
+}
+
+body.theme-kali .panel-header i {
+    color: #43b581;
+}
+
+body.theme-kali .ubuntu-btn {
+    background: #1e3a5f;
+    border: 1px solid #1e90ff;
+    color: #e0e9ff;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+}
+body.theme-kali .ubuntu-btn:hover {
+    background: #1e90ff;
+    border-color: #7eb6ff;
+    color: #0b1016;
+    box-shadow: 0 0 12px #1e90ff80;
+}
+
+body.theme-kali .memo-editor textarea {
+    background: #0f1a24;
+    border: 1px solid #1e90ff;
+    color: #d0dae5;
+}
+
+body.theme-kali .terminal-output .command-line {
+    color: #8ab8ff;
+}
+body.theme-kali .terminal-output .output-line {
+    color: #d0dae5;
+}
+body.theme-kali .terminal-output .error-line {
+    color: #ff6b6b;
+}
+
+body.theme-kali ::-webkit-scrollbar-thumb {
+    background: #1e3a5f;
+    border-radius: 6px;
+}
+body.theme-kali ::-webkit-scrollbar-thumb:hover {
+    background: #1e90ff;
+}
+body.theme-kali ::-webkit-scrollbar-track {
+    background: #0b1016;
+}
+/* ----- Deepin (清爽科技蓝) ----- */
+body.theme-deepin {
+    --ubuntu-bg: #e3f2fd;
+    --ubuntu-terminal-bg: rgba(255, 255, 255, 0.96);  /* 提高不透明度，背景几乎不透出 */
+    --ubuntu-panel-bg: rgba(250, 252, 254, 0.96);
+    --ubuntu-text: #0a1a2a;           /* 深蓝黑色，确保对比度 */
+    --ubuntu-prompt: #005a9e;          /* 深蓝色提示符，与标题呼应 */
+    --ubuntu-highlight: #0078d7;
+    --ubuntu-border: #90c0e0;
+    background-image: linear-gradient(145deg, #d4e9ff 0%, #b0d4f0 100%);
+}
+body.theme-deepin .terminal-header {
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid #0078d7;
+}
+body.theme-deepin .terminal-header .window-title { color: #003366; font-weight: bold; }
+body.theme-deepin .control:nth-child(1) { background: #ff5f56; }
+body.theme-deepin .control:nth-child(2) { background: #ffbd2e; }
+body.theme-deepin .control:nth-child(3) { background: #27c93f; }
+body.theme-deepin .panel-header {
+    background: rgba(230, 245, 255, 0.9);
+    border-bottom: 1px solid #0078d7;
+    color: #003366;
+}
+body.theme-deepin .ubuntu-btn {
+    background: #0078d7;
+    border-color: #00a8ff;
+    color: white;
+}
+body.theme-deepin .ubuntu-btn:hover { background: #00a8ff; }
+body.theme-deepin .memo-editor textarea {
+    background: #ffffff;
+    border-color: #0078d7;
+    color: #0a1a2a;
+}
+body.theme-deepin ::-webkit-scrollbar-thumb { background: #0078d7; }
+
+/* 强制覆盖终端输出文字颜色（确保使用变量） */
+body.theme-deepin .terminal-output .output-line {
+    color: var(--ubuntu-text);
+}
+body.theme-deepin .terminal-output .command-line {
+    color: #2a5a8a;  /* 命令回显稍微柔和但保持可读 */
+}
+body.theme-deepin .prompt {
+    color: var(--ubuntu-prompt) !important;
+}
+body.theme-deepin .cmd-input {
+    color: var(--ubuntu-text);
+    caret-color: var(--ubuntu-prompt);
+}
+body.theme-deepin .memo-content {
+    color: var(--ubuntu-text) !important;
+}
+
+/* ----- Debian (经典紫红) ----- */
+/* ----- Debian (经典紫红 · 精致版) ----- */
+body.theme-debian {
+    --ubuntu-bg: #2d0f1a;                      /* 更深邃的紫红底 */
+    --ubuntu-terminal-bg: rgba(45, 15, 26, 0.92);
+    --ubuntu-panel-bg: rgba(70, 25, 40, 0.9);
+    --ubuntu-text: #f5ece9;                    /* 柔和米白，提升可读性 */
+    --ubuntu-prompt: #e31b5f;                  /* Debian 标志性的品红 */
+    --ubuntu-highlight: #c7004c;               /* 深红高亮 */
+    --ubuntu-border: #9e3b5a;                  /* 边框带紫调 */
+    background-image: radial-gradient(circle at 70% 20%, #a0325a, #2d0f1a);
+    background-blend-mode: overlay;
+}
+
+body.theme-debian .terminal-header {
+    background: rgba(30, 10, 15, 0.7);
+    border-bottom: 1px solid #e31b5f;
+    box-shadow: 0 1px 8px rgba(199, 0, 76, 0.3);
+}
+
+body.theme-debian .terminal-header .window-title {
+    color: #ffb0c0;
+    text-shadow: 0 0 5px #e31b5f80;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+body.theme-debian .control:nth-child(1) { background: #ff6b6b; box-shadow: 0 0 6px #ff6b6b80; }
+body.theme-debian .control:nth-child(2) { background: #f5b342; box-shadow: 0 0 6px #f5b34280; }
+body.theme-debian .control:nth-child(3) { background: #6fcf97; box-shadow: 0 0 6px #6fcf9780; }
+
+body.theme-debian .panel-header {
+    background: rgba(50, 15, 30, 0.9);
+    border-bottom: 1px solid #e31b5f;
+}
+
+body.theme-debian .panel-header i {
+    color: #e31b5f;
+}
+
+body.theme-debian .ubuntu-btn {
+    background: #a02040;
+    border: 1px solid #e31b5f;
+    color: #fce4ec;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s;
+}
+body.theme-debian .ubuntu-btn:hover {
+    background: #c7004c;
+    border-color: #ff8ab0;
+    color: #ffffff;
+    box-shadow: 0 0 14px #e31b5f;
+}
+
+body.theme-debian .memo-editor textarea {
+    background: #2a0f1a;
+    border: 1px solid #e31b5f;
+    color: #f5ece9;
+}
+
+body.theme-debian .terminal-output .command-line {
+    color: #ffb0c0;
+}
+body.theme-debian .terminal-output .output-line {
+    color: #f5ece9;
+}
+body.theme-debian .terminal-output .error-line {
+    color: #ff7b93;
+}
+
+body.theme-debian ::-webkit-scrollbar-thumb {
+    background: #a02040;
+    border-radius: 6px;
+}
+body.theme-debian ::-webkit-scrollbar-thumb:hover {
+    background: #e31b5f;
+}
+body.theme-debian ::-webkit-scrollbar-track {
+    background: #2d0f1a;
+}
+
+/* 增强输入框提示符颜色 */
+body.theme-debian .prompt {
+    color: #e31b5f !important;
+    text-shadow: 0 0 4px #c7004c;
+}
+
+/* ----- UOS / 统信 (深邃商务蓝 · 精致版) ----- */
+body.theme-uos {
+    --ubuntu-bg: #12212e;                      /* 更浓郁的深海蓝底 */
+    --ubuntu-terminal-bg: rgba(18, 33, 46, 0.94);
+    --ubuntu-panel-bg: rgba(28, 48, 65, 0.92);
+    --ubuntu-text: #ecf3fb;                    /* 清透瓷白，对比度佳 */
+    --ubuntu-prompt: #3b8cff;                  /* 统信品牌蓝 */
+    --ubuntu-highlight: #00a8e8;               /* 清爽亮蓝 */
+    --ubuntu-border: #1e5f9e;                  /* 边框带金属质感 */
+    background-image: linear-gradient(135deg, #1e3f66, #0e1f30);
+    background-blend-mode: overlay;
+}
+
+body.theme-uos .terminal-header {
+    background: rgba(10, 22, 34, 0.8);
+    border-bottom: 1px solid #3b8cff;
+    box-shadow: 0 1px 8px rgba(59, 140, 255, 0.25);
+}
+
+body.theme-uos .terminal-header .window-title {
+    color: #8fc3ff;
+    text-shadow: 0 0 6px #3b8cff66;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+body.theme-uos .control:nth-child(1) { background: #ff6b6b; box-shadow: 0 0 6px #ff6b6b80; }
+body.theme-uos .control:nth-child(2) { background: #f7b731; box-shadow: 0 0 6px #f7b73180; }
+body.theme-uos .control:nth-child(3) { background: #38c172; box-shadow: 0 0 6px #38c17280; }
+
+body.theme-uos .panel-header {
+    background: rgba(20, 40, 60, 0.9);
+    border-bottom: 1px solid #3b8cff;
+}
+
+body.theme-uos .panel-header i {
+    color: #3b8cff;
+}
+
+body.theme-uos .ubuntu-btn {
+    background: #1e5f9e;
+    border: 1px solid #3b8cff;
+    color: #ecf3fb;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+}
+body.theme-uos .ubuntu-btn:hover {
+    background: #3b8cff;
+    border-color: #a0ceff;
+    color: #0e1f30;
+    box-shadow: 0 0 14px #3b8cff;
+}
+
+body.theme-uos .memo-editor textarea {
+    background: #0d1f2c;
+    border: 1px solid #3b8cff;
+    color: #ecf3fb;
+}
+
+body.theme-uos .terminal-output .command-line {
+    color: #a0ceff;
+}
+body.theme-uos .terminal-output .output-line {
+    color: #ecf3fb;
+}
+body.theme-uos .terminal-output .error-line {
+    color: #ff8a7a;
+}
+
+body.theme-uos ::-webkit-scrollbar-thumb {
+    background: #1e5f9e;
+    border-radius: 6px;
+}
+body.theme-uos ::-webkit-scrollbar-thumb:hover {
+    background: #3b8cff;
+}
+body.theme-uos ::-webkit-scrollbar-track {
+    background: #12212e;
+}
+
+/* 提示符增强 */
+body.theme-uos .prompt {
+    color: #3b8cff !important;
+    text-shadow: 0 0 6px #1e5f9e;
+}
+/* ----- 银河麒麟 Kylin (稳重墨绿) ----- */
+/* ----- 银河麒麟 Kylin (沉稳墨绿 · 精致版) ----- */
+body.theme-kylin {
+    --ubuntu-bg: #14261c;                      /* 更深邃的墨绿基底 */
+    --ubuntu-terminal-bg: rgba(20, 38, 28, 0.94);
+    --ubuntu-panel-bg: rgba(35, 55, 42, 0.92);
+    --ubuntu-text: #eaf4ee;                    /* 柔和青白，阅读舒适 */
+    --ubuntu-prompt: #4caf7c;                  /* 鲜活的麒麟绿 */
+    --ubuntu-highlight: #d4a017;               /* 点缀金色，象征尊贵 */
+    --ubuntu-border: #2e6b4a;                  /* 边框带翠 */
+    background-image: radial-gradient(circle at 40% 30%, #2a6e4a, #14261c);
+    background-blend-mode: soft-light;
+}
+
+body.theme-kylin .terminal-header {
+    background: rgba(15, 28, 20, 0.75);
+    border-bottom: 1px solid #4caf7c;
+    box-shadow: 0 1px 8px rgba(76, 175, 124, 0.2);
+}
+
+body.theme-kylin .terminal-header .window-title {
+    color: #b8e6c8;
+    text-shadow: 0 0 4px #4caf7c80;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+body.theme-kylin .control:nth-child(1) { background: #e06c75; box-shadow: 0 0 5px #e06c7580; }
+body.theme-kylin .control:nth-child(2) { background: #e5c07b; box-shadow: 0 0 5px #e5c07b80; }
+body.theme-kylin .control:nth-child(3) { background: #7fb07f; box-shadow: 0 0 5px #7fb07f80; }
+
+body.theme-kylin .panel-header {
+    background: rgba(25, 45, 32, 0.9);
+    border-bottom: 1px solid #4caf7c;
+}
+
+body.theme-kylin .panel-header i {
+    color: #d4a017;                           /* 金色图标点缀 */
+}
+
+body.theme-kylin .ubuntu-btn {
+    background: #1e4d2e;
+    border: 1px solid #4caf7c;
+    color: #eaf4ee;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+}
+body.theme-kylin .ubuntu-btn:hover {
+    background: #2e6b4a;
+    border-color: #d4a017;
+    color: #ffffff;
+    box-shadow: 0 0 12px #4caf7c;
+}
+
+body.theme-kylin .memo-editor textarea {
+    background: #0f2218;
+    border: 1px solid #4caf7c;
+    color: #eaf4ee;
+}
+
+body.theme-kylin .terminal-output .command-line {
+    color: #b8e6c8;
+}
+body.theme-kylin .terminal-output .output-line {
+    color: #eaf4ee;
+}
+body.theme-kylin .terminal-output .error-line {
+    color: #ff9e8f;
+}
+
+body.theme-kylin ::-webkit-scrollbar-thumb {
+    background: #2e6b4a;
+    border-radius: 6px;
+}
+body.theme-kylin ::-webkit-scrollbar-thumb:hover {
+    background: #4caf7c;
+}
+body.theme-kylin ::-webkit-scrollbar-track {
+    background: #14261c;
+}
+
+/* 提示符增强 */
+body.theme-kylin .prompt {
+    color: #4caf7c !important;
+    text-shadow: 0 0 4px #2e6b4a;
+}
